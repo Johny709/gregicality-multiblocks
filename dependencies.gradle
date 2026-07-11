@@ -38,5 +38,6 @@
  * For more details, see https://docs.gradle.org/8.4/userguide/java_library_plugin.html#sec:java_library_configurations_graph
  */
 dependencies {
-    api("gregtech:gregtech:2.8.10-beta")
+    api(rfg.deobf(project.files("libs/gregtech-1.12.2-2.9.0-beta-dev.jar")))
+    api("org.jetbrains:annotations:26.1.0")
 }
