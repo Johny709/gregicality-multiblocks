@@ -20,7 +20,8 @@ public final class GCYMFirstDegreeMaterials {
                 .color(0xDEDEFF).iconSet(MaterialIconSet.BRIGHT)
                 .flags(GENERATE_PLATE)
                 .components(Iron, 4, Chrome, 3, Tungsten, 2, Molybdenum, 1)
-                .blastTemp(3790, BlastProperty.GasTier.HIGH, GTValues.VA[GTValues.EV], 1000)
+                .blast(builder -> builder.temp(3790, BlastProperty.GasTier.HIGH)
+                        .blastStats(GTValues.VA[GTValues.EV], 1000))
                 .build();
 
         WatertightSteel = new Material.Builder(3001, gcymId("watertight_steel"))
@@ -28,7 +29,8 @@ public final class GCYMFirstDegreeMaterials {
                 .color(0x355D6A).iconSet(MaterialIconSet.METALLIC)
                 .flags(GENERATE_PLATE, GENERATE_ROD, GENERATE_FRAME)
                 .components(Iron, 7, Aluminium, 4, Nickel, 2, Chrome, 1, Sulfur, 1)
-                .blastTemp(3850, BlastProperty.GasTier.MID, GTValues.VA[GTValues.EV], 800)
+                .blast(builder -> builder.temp(3850, BlastProperty.GasTier.MID)
+                        .blastStats(GTValues.VA[GTValues.EV], 800))
                 .build();
 
         MaragingSteel300 = new Material.Builder(3002, gcymId("maraging_steel_300"))
@@ -36,7 +38,8 @@ public final class GCYMFirstDegreeMaterials {
                 .color(0x637087).iconSet(MaterialIconSet.METALLIC)
                 .flags(GENERATE_PLATE, GENERATE_ROD, GENERATE_FRAME)
                 .components(Iron, 16, Titanium, 1, Aluminium, 1, Nickel, 4, Cobalt, 2)
-                .blastTemp(4000, BlastProperty.GasTier.HIGH, GTValues.VA[GTValues.EV], 1000)
+                .blast(builder -> builder.temp(4000, BlastProperty.GasTier.HIGH)
+                        .blastStats(GTValues.VA[GTValues.EV], 1000))
                 .build();
 
         HastelloyC276 = new Material.Builder(3003, gcymId("hastelloy_c_276"))
@@ -44,7 +47,7 @@ public final class GCYMFirstDegreeMaterials {
                 .color(0xCF3939).iconSet(MaterialIconSet.METALLIC)
                 .flags(GENERATE_PLATE, GENERATE_ROD, GENERATE_FRAME)
                 .components(Nickel, 12, Molybdenum, 8, Chrome, 7, Tungsten, 1, Cobalt, 1, Copper, 1)
-                .blastTemp(4625, BlastProperty.GasTier.MID)
+                .blast(4625, BlastProperty.GasTier.MID)
                 .build();
 
         HastelloyX = new Material.Builder(3004, gcymId("hastelloy_x"))
@@ -52,7 +55,8 @@ public final class GCYMFirstDegreeMaterials {
                 .color(0x6BA3E3).iconSet(MaterialIconSet.METALLIC)
                 .flags(GENERATE_PLATE, GENERATE_ROD, GENERATE_FRAME)
                 .components(Nickel, 8, Iron, 3, Tungsten, 4, Molybdenum, 2, Chrome, 1, Niobium, 1)
-                .blastTemp(4200, BlastProperty.GasTier.HIGH, GTValues.VA[GTValues.EV], 900)
+                .blast(builder -> builder.temp(4200, BlastProperty.GasTier.HIGH)
+                        .blastStats(GTValues.VA[GTValues.EV], 900))
                 .build();
 
         Trinaquadalloy = new Material.Builder(3005, gcymId("trinaquadalloy"))
@@ -60,7 +64,8 @@ public final class GCYMFirstDegreeMaterials {
                 .color(0x281832).iconSet(MaterialIconSet.BRIGHT)
                 .flags(GENERATE_PLATE, GENERATE_DOUBLE_PLATE)
                 .components(Trinium, 6, Naquadah, 2, Carbon, 1)
-                .blastTemp(8747, BlastProperty.GasTier.HIGHER, GTValues.VA[GTValues.ZPM], 1200)
+                .blast(builder -> builder.temp(8747, BlastProperty.GasTier.HIGHER)
+                        .blastStats(GTValues.VA[GTValues.ZPM], 1200))
                 .build();
 
         Zeron100 = new Material.Builder(3006, gcymId("zeron_100"))
@@ -68,7 +73,8 @@ public final class GCYMFirstDegreeMaterials {
                 .color(0x325A8C).iconSet(MaterialIconSet.METALLIC)
                 .flags(GENERATE_PLATE)
                 .components(Iron, 10, Nickel, 2, Tungsten, 2, Niobium, 1, Cobalt, 1)
-                .blastTemp(3693, BlastProperty.GasTier.MID, GTValues.VA[GTValues.EV], 1000)
+                .blast(builder -> builder.temp(3693, BlastProperty.GasTier.MID)
+                        .blastStats(GTValues.VA[GTValues.EV], 1000))
                 .build();
 
         TitaniumCarbide = new Material.Builder(3007, gcymId("titanium_carbide"))
@@ -76,7 +82,8 @@ public final class GCYMFirstDegreeMaterials {
                 .color(0xB20B3A).iconSet(MaterialIconSet.METALLIC)
                 .flags(GENERATE_PLATE)
                 .components(Titanium, 1, Carbon, 1)
-                .blastTemp(3430, BlastProperty.GasTier.MID, GTValues.VA[GTValues.EV], 1000)
+                .blast(builder -> builder.temp(3430, BlastProperty.GasTier.MID)
+                        .blastStats(GTValues.VA[GTValues.EV], 1000))
                 .build();
 
         TantalumCarbide = new Material.Builder(3008, gcymId("tantalum_carbide"))
@@ -84,7 +91,8 @@ public final class GCYMFirstDegreeMaterials {
                 .color(0x56566A).iconSet(MaterialIconSet.METALLIC)
                 .flags(GENERATE_PLATE, GENERATE_DENSE)
                 .components(Tantalum, 1, Carbon, 1)
-                .blastTemp(4120, BlastProperty.GasTier.MID, GTValues.VA[GTValues.EV], 1200)
+                .blast(builder -> builder.temp(4120, BlastProperty.GasTier.MID)
+                        .blastStats(GTValues.VA[GTValues.EV], 1200))
                 .build();
 
         MolybdenumDisilicide = new Material.Builder(3009, gcymId("molybdenum_disilicide"))
@@ -92,7 +100,8 @@ public final class GCYMFirstDegreeMaterials {
                 .color(0x6A5BA3).iconSet(MaterialIconSet.METALLIC)
                 .flags(EXT_METAL, GENERATE_DOUBLE_PLATE, GENERATE_LONG_ROD, GENERATE_SPRING, GENERATE_RING)
                 .components(Molybdenum, 1, Silicon, 2)
-                .blastTemp(2300, BlastProperty.GasTier.MID, GTValues.VA[GTValues.EV], 800)
+                .blast(builder -> builder.temp(2300, BlastProperty.GasTier.MID)
+                        .blastStats(GTValues.VA[GTValues.EV], 800))
                 .build();
     }
 }

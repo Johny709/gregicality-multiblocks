@@ -45,7 +45,7 @@ public class BlockUniqueCasing extends VariantActiveBlock<BlockUniqueCasing.Uniq
     }
 
     @Override
-    protected boolean isBloomEnabled(UniqueCasingType value) {
+    public boolean isBloomEnabled(UniqueCasingType value) {
         if (ConfigHolder.client.coilsActiveEmissiveTextures && value == UniqueCasingType.MOLYBDENUM_DISILICIDE_COIL) {
             return true;
         }

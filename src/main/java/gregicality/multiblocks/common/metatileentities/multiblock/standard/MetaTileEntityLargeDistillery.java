@@ -2,17 +2,16 @@ package gregicality.multiblocks.common.metatileentities.multiblock.standard;
 
 import static gregtech.api.util.RelativeDirection.*;
 
-import java.util.List;
 import java.util.function.Function;
 
+import com.cleanroommc.modularui.api.drawable.IKey;
+import gregtech.api.metatileentity.multiblock.ui.MultiblockUIBuilder;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.items.IItemHandlerModifiable;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -89,19 +88,18 @@ public class MetaTileEntityLargeDistillery extends GCYMRecipeMapMultiblockContro
     }
 
     @Override
-    protected void addDisplayText(List<ITextComponent> textList) {
-        if (isStructureFormed()) {
-            FluidStack stackInTank = importFluids.drain(Integer.MAX_VALUE, false);
-            if (stackInTank != null && stackInTank.amount > 0) {
-                ITextComponent fluidName = TextComponentUtil.setColor(GTUtility.getFluidTranslation(stackInTank),
-                        TextFormatting.AQUA);
-                textList.add(TextComponentUtil.translationWithColor(
-                        TextFormatting.GRAY,
-                        "gregtech.multiblock.distillation_tower.distilling_fluid",
-                        fluidName));
+    protected void configureDisplayText(MultiblockUIBuilder builder) {
+        super.configureDisplayText(builder);
+        builder.addCustom((key, syncer) -> {
+            if (syncer.syncBoolean(this.isStructureFormed())) {
+                FluidStack stackInTank = syncer.syncFluidStack(importFluids.drain(Integer.MAX_VALUE, false));
+                if (stackInTank != null && stackInTank.amount > 0) {
+                    IKey fluidName = KeyUtil.lang(TextFormatting.AQUA, stackInTank.getUnlocalizedName());
+                    key.add(KeyUtil.lang(TextFormatting.GRAY, "gregtech.multiblock.distillation_tower.distilling_fluid",
+                            fluidName));
+                }
             }
-        }
-        super.addDisplayText(textList);
+        });
     }
 
     @Override
@@ -218,52 +216,19 @@ public class MetaTileEntityLargeDistillery extends GCYMRecipeMapMultiblockContro
         }
 
         @Override
-        protected boolean setupAndConsumeRecipeInputs(@NotNull Recipe recipe,
-                                                      @NotNull IItemHandlerModifiable importInventory,
-                                                      @NotNull IMultipleTankHandler importFluids) {
-            if (!usesAdvHatchLogic()) {
-                return super.setupAndConsumeRecipeInputs(recipe, importInventory, importFluids);
-            }
-
-            this.overclockResults = calculateOverclock(recipe);
-
-            modifyOverclockPost(overclockResults, recipe.getRecipePropertyStorage());
-
-            if (!hasEnoughPower(overclockResults)) {
-                return false;
-            }
-
-            IItemHandlerModifiable exportInventory = getOutputInventory();
-
-            // We have already trimmed outputs and chanced outputs at this time
-            // Attempt to merge all outputs + chanced outputs into the output bus, to prevent voiding chanced outputs
-            if (!metaTileEntity.canVoidRecipeItemOutputs() &&
-                    !GTTransferUtils.addItemsToItemHandler(exportInventory, true, recipe.getAllItemOutputs())) {
-                this.isOutputsFull = true;
-                return false;
-            }
-
-            // Perform layerwise fluid checks
+        protected boolean checkOutputSpaceFluids(@NotNull Recipe recipe, @NotNull IMultipleTankHandler exportFluids) {
+            // We have already trimmed fluid outputs at this time
             if (!metaTileEntity.canVoidRecipeFluidOutputs() &&
                     !handler.applyFluidToOutputs(recipe.getAllFluidOutputs(), false)) {
                 this.isOutputsFull = true;
                 return false;
             }
-
-            this.isOutputsFull = false;
-            if (recipe.matches(true, importInventory, importFluids)) {
-                this.metaTileEntity.addNotifiedInput(importInventory);
-                return true;
-            }
-            return false;
+            return true;
         }
 
         @Override
         protected IMultipleTankHandler getOutputTank() {
-            if (usesAdvHatchLogic())
-                return handler.getFluidTanks();
-
-            return super.getOutputTank();
+            return handler.getFluidTanks();
         }
     }
 }

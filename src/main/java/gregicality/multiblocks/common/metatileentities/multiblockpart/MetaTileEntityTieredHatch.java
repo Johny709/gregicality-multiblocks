@@ -2,6 +2,7 @@ package gregicality.multiblocks.common.metatileentities.multiblockpart;
 
 import java.util.List;
 
+import gregtech.api.metatileentity.multiblock.AbilityInstances;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -69,7 +70,7 @@ public class MetaTileEntityTieredHatch extends MetaTileEntityMultiblockPart
     }
 
     @Override
-    public void registerAbilities(List<ITieredMetaTileEntity> list) {
-        list.add(this);
+    public void registerAbilities(@NotNull AbilityInstances abilityInstances) {
+        abilityInstances.add(this);
     }
 }
