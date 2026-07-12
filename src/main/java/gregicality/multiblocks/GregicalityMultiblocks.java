@@ -21,7 +21,7 @@ public class GregicalityMultiblocks {
 
     public static final String MODID = "gcym";
     public static final String NAME = "Gregicality Multiblocks";
-    public static final String VERSION = "1.2.11";
+    public static final String VERSION = "1.3";
 
     @SidedProxy(modId = MODID,
                 clientSide = "gregicality.multiblocks.common.ClientProxy",
