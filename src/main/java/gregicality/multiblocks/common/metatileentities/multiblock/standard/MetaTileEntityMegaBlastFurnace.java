@@ -97,7 +97,8 @@ public class MetaTileEntityMegaBlastFurnace extends GCYMRecipeMapMultiblockContr
                 })
                 .addParallelsLine(this.recipeMapWorkable.getParallelLimit())
                 .addWorkingStatusLine()
-                .addProgressLine(this.recipeMapWorkable.getProgress(), this.recipeMapWorkable.getMaxProgress());
+                .addProgressLine(this.recipeMapWorkable.getProgress(), this.recipeMapWorkable.getMaxProgress())
+                .addRecipeOutputLine(this.recipeMapWorkable);
     }
 
     @Override
