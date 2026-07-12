@@ -3,6 +3,8 @@ package gregicality.multiblocks.common;
 import java.util.Objects;
 import java.util.function.Function;
 
+import gregtech.api.GregTechAPI;
+import gregtech.api.metatileentity.registry.MTEManager;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -32,6 +34,11 @@ public class CommonProxy {
         if (event.getModID().equals(GregicalityMultiblocks.MODID)) {
             ConfigManager.sync(GregicalityMultiblocks.MODID, Config.Type.INSTANCE);
         }
+    }
+
+    @SubscribeEvent
+    public static void registerMTERegistry(MTEManager.MTERegistryEvent event) {
+        GregTechAPI.mteManager.createRegistry(GregicalityMultiblocks.MODID);
     }
 
     @SubscribeEvent
