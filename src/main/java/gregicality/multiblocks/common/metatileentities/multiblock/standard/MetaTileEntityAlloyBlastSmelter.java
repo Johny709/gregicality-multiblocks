@@ -51,6 +51,8 @@ import gregicality.multiblocks.common.block.blocks.BlockLargeMultiblockCasing;
 import gregicality.multiblocks.common.block.blocks.BlockUniqueCasing;
 import gregicality.multiblocks.common.metatileentities.GCYMMetaTileEntities;
 
+import static gregtech.api.util.RelativeDirection.*;
+
 public class MetaTileEntityAlloyBlastSmelter extends RecipeMapMultiblockController implements IHeatingCoil {
 
     private int blastFurnaceTemperature;
@@ -134,7 +136,7 @@ public class MetaTileEntityAlloyBlastSmelter extends RecipeMapMultiblockControll
     @Override
     public List<MultiblockShapeInfo> getMatchingShapes() {
         ArrayList<MultiblockShapeInfo> shapeInfo = new ArrayList<>();
-        MultiblockShapeInfo.Builder builder = MultiblockShapeInfo.builder()
+        MultiblockShapeInfo.Builder builder = MultiblockShapeInfo.builder(RIGHT, DOWN, FRONT)
                 .aisle("#XEX#", "#CCC#", "#GGG#", "#CCC#", "#XXX#")
                 .aisle("XXXXX", "C###C", "G###G", "C###C", "XXXXX")
                 .aisle("XXXXX", "C###C", "G###G", "C###C", "XXMXX")
