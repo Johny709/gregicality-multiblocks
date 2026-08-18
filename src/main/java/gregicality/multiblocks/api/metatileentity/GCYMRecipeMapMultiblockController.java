@@ -5,10 +5,12 @@ import java.util.List;
 import gregtech.api.metatileentity.multiblock.ui.KeyManager;
 import gregtech.api.metatileentity.multiblock.ui.MultiblockUIBuilder;
 import gregtech.api.metatileentity.multiblock.ui.UISyncer;
+import gregtech.api.pattern.PatternMatchContext;
 import gregtech.api.util.KeyUtil;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 import org.jetbrains.annotations.NotNull;
@@ -27,6 +29,8 @@ import gregicality.multiblocks.common.GCYMConfigHolder;
 
 public abstract class GCYMRecipeMapMultiblockController extends MultiMapMultiblockController
                                                         implements IParallelMultiblock {
+
+    private int voltageTier = -1;
 
     public GCYMRecipeMapMultiblockController(ResourceLocation metaTileEntityId, RecipeMap<?> recipeMap) {
         this(metaTileEntityId, new RecipeMap<?>[] { recipeMap });
@@ -59,7 +63,30 @@ public abstract class GCYMRecipeMapMultiblockController extends MultiMapMultiblo
     }
 
     private void addTierHatch(KeyManager key, UISyncer syncer) {
-        // TODO add Tiered Hatch Line without syncer breaking
+        int tier = syncer.syncInt(this.voltageTier);
+        if (this.isStructureFormed() && tier >= 0) {
+            long voltage = syncer.syncLong(GTValues.V[tier]);
+            long input = syncer.syncLong(this.energyContainer.getInputVoltage());
+            long output = syncer.syncLong(this.energyContainer.getOutputVoltage());
+            long maxVoltage = Math.min(voltage, Math.max(input, output));
+            String voltageName = syncer.syncString(GTValues.VNF[tier]);
+            key.add(KeyUtil.lang(TextFormatting.GRAY, "gcym.multiblock.tiered_hatch.tooltip", maxVoltage, voltageName));
+        }
+    }
+
+    @Override
+    protected void formStructure(PatternMatchContext context) {
+        super.formStructure(context);
+        List<ITieredMetaTileEntity> list = getAbilities(GCYMMultiblockAbility.TIERED_HATCH);
+        if (GCYMConfigHolder.globalMultiblocks.enableTieredCasings && !list.isEmpty()) {
+            this.voltageTier = list.get(0).getTier();
+        }
+    }
+
+    @Override
+    public void invalidateStructure() {
+        super.invalidateStructure();
+        this.voltageTier = -1;
     }
 
     @Override
