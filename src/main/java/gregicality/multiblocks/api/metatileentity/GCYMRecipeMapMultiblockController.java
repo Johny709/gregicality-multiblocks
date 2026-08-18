@@ -2,7 +2,9 @@ package gregicality.multiblocks.api.metatileentity;
 
 import java.util.List;
 
+import gregtech.api.metatileentity.multiblock.ui.KeyManager;
 import gregtech.api.metatileentity.multiblock.ui.MultiblockUIBuilder;
+import gregtech.api.metatileentity.multiblock.ui.UISyncer;
 import gregtech.api.util.KeyUtil;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
@@ -49,22 +51,15 @@ public abstract class GCYMRecipeMapMultiblockController extends MultiMapMultiblo
         builder.setWorkingStatus(this.recipeMapWorkable.isWorkingEnabled(), this.recipeMapWorkable.isActive())
                 .addEnergyUsageLine(this.getEnergyContainer())
                 .addEnergyTierLine(GTUtility.getTierByVoltage(this.recipeMapWorkable.getMaxVoltage()))
-                .addCustom((key, syncer) -> {
-                    // Tiered Hatch Line
-                    if (syncer.syncBoolean(this.isStructureFormed())) {
-                        List<ITieredMetaTileEntity> list = getAbilities(GCYMMultiblockAbility.TIERED_HATCH);
-                        if (GCYMConfigHolder.globalMultiblocks.enableTieredCasings && !list.isEmpty()) {
-                            long maxVoltage = Math.min(syncer.syncLong(GTValues.V[list.get(0).getTier()]),
-                                    Math.max(syncer.syncLong(energyContainer.getInputVoltage()), syncer.syncLong(energyContainer.getOutputVoltage())));
-                            String voltageName = syncer.syncString(GTValues.VNF[list.get(0).getTier()]);
-                            key.add(KeyUtil.lang("gcym.multiblock.tiered_hatch.tooltip", maxVoltage, voltageName));
-                        }
-                    }
-                })
+                .addCustom(this::addTierHatch)
                 .addParallelsLine(this.recipeMapWorkable.getParallelLimit())
                 .addWorkingStatusLine()
                 .addProgressLine(this.recipeMapWorkable.getProgress(), this.recipeMapWorkable.getMaxProgress())
                 .addRecipeOutputLine(this.recipeMapWorkable);
+    }
+
+    private void addTierHatch(KeyManager key, UISyncer syncer) {
+        // TODO add Tiered Hatch Line without syncer breaking
     }
 
     @Override
