@@ -43,7 +43,7 @@ dependencies {
     api(rfg.deobf(project.files("libs/CTM-MC1.12.2-1.0.2.31.jar")))
     api("org.jetbrains:annotations:26.1.0")
     api("com.cleanroommc:modularui:3.1.6") { transitive = false }
-    api("com.cleanroommc:groovyscript:1.2.0-hotfix1") { transitive = false }
+    api("com.cleanroommc:groovyscript:1.4.3") { transitive = false }
 
     testImplementation("org.hamcrest:hamcrest:3.0")
 }
