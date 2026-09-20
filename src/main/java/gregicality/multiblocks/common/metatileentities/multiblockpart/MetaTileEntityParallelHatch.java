@@ -3,15 +3,26 @@ package gregicality.multiblocks.common.metatileentities.multiblockpart;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.IntSupplier;
+import java.util.regex.Pattern;
 
+import com.cleanroommc.modularui.api.drawable.IKey;
+import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.UISettings;
+import com.cleanroommc.modularui.value.sync.InteractionSyncHandler;
+import com.cleanroommc.modularui.value.sync.PanelSyncManager;
+import com.cleanroommc.modularui.value.sync.StringSyncValue;
+import com.cleanroommc.modularui.widgets.ButtonWidget;
+import com.cleanroommc.modularui.widgets.TextWidget;
+import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 import gregtech.api.metatileentity.multiblock.AbilityInstances;
+import gregtech.api.mui.GTGuiTextures;
+import gregtech.api.mui.IMetaTileEntityGuiHolder;
+import gregtech.api.mui.MetaTileEntityGuiData;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 import org.jetbrains.annotations.NotNull;
@@ -19,9 +30,6 @@ import org.jetbrains.annotations.Nullable;
 
 import gregtech.api.GTValues;
 import gregtech.api.capability.GregtechTileCapabilities;
-import gregtech.api.gui.GuiTextures;
-import gregtech.api.gui.ModularUI;
-import gregtech.api.gui.widgets.*;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.IMultiblockAbilityPart;
@@ -39,7 +47,7 @@ import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.vec.Matrix4;
 
 public class MetaTileEntityParallelHatch extends MetaTileEntityMultiblockPart
-                                         implements IMultiblockAbilityPart<IParallelHatch>, IParallelHatch {
+                                         implements IMultiblockAbilityPart<IParallelHatch>, IParallelHatch, IMetaTileEntityGuiHolder {
 
     private static final int MIN_PARALLEL = 1;
 
@@ -63,43 +71,46 @@ public class MetaTileEntityParallelHatch extends MetaTileEntityMultiblockPart
         return currentParallel;
     }
 
-    public void setCurrentParallel(int parallelAmount) {
-        this.currentParallel = MathHelper.clamp(this.currentParallel + parallelAmount, 1, this.maxParallel);
+    public void setCurrentParallel(String amount) {
+        if (amount == null || amount.isEmpty())
+            amount = String.valueOf(0);
+        this.currentParallel = (int) Math.max(0, Math.min(this.maxParallel, Long.parseLong(amount)));
+        this.markDirty();
     }
 
     @Override
-    protected ModularUI createUI(@NotNull EntityPlayer entityPlayer) {
-        ServerWidgetGroup parallelAmountGroup = new ServerWidgetGroup(() -> true);
-        parallelAmountGroup.addWidget(new ImageWidget(62, 36, 53, 20, GuiTextures.DISPLAY)
-                .setTooltip("gcym.machine.parallel_hatch.display"));
+    public @NotNull ModularPanel buildUI(MetaTileEntityGuiData metaTileEntityGuiData, PanelSyncManager syncManager, UISettings uiSettings) {
+        syncManager.syncValue("parallel_count", new StringSyncValue(() -> String.valueOf(this.currentParallel), this::setCurrentParallel));
+        syncManager.syncValue("parallel_add", new InteractionSyncHandler()
+                .setOnMousePressed(mouseData -> this.setCurrentParallel(String.valueOf((long) this.currentParallel + 1))));
+        syncManager.syncValue("parallel_sub", new InteractionSyncHandler()
+                .setOnMousePressed(mouseData -> this.setCurrentParallel(String.valueOf((long) this.currentParallel - 1))));
 
-        parallelAmountGroup.addWidget(new IncrementButtonWidget(118, 36, 30, 20, 1, 4, 16, 64, this::setCurrentParallel)
-                .setDefaultTooltip()
-                .setShouldClientCallback(false));
-        parallelAmountGroup
-                .addWidget(new IncrementButtonWidget(29, 36, 30, 20, -1, -4, -16, -64, this::setCurrentParallel)
-                        .setDefaultTooltip()
-                        .setShouldClientCallback(false));
-
-        parallelAmountGroup.addWidget(new TextFieldWidget2(63, 42, 51, 20, this::getParallelAmountToString, val -> {
-            if (val != null && !val.isEmpty()) {
-                setCurrentParallel(Integer.parseInt(val));
-            }
-        })
-                .setCentered(true)
-                .setNumbersOnly(1, this.maxParallel)
-                .setMaxLength(3)
-                .setValidator(getTextFieldValidator(() -> this.maxParallel)));
-
-        return ModularUI.defaultBuilder()
-                .widget(new LabelWidget(5, 5, getMetaFullName()))
-                .widget(parallelAmountGroup)
-                .bindPlayerInventory(entityPlayer.inventory, GuiTextures.SLOT, 0)
-                .build(getHolder(), entityPlayer);
-    }
-
-    public String getParallelAmountToString() {
-        return Integer.toString(this.currentParallel);
+        return ModularPanel.defaultPanel("parallel_hatch")
+                .child(new TextWidget<>(IKey.lang(this.getMetaFullName()))
+                        .pos(5, 5))
+                .child(new TextFieldWidget()
+                        .pos(53, 36)
+                        .size(71, 20)
+                        .setMaxLength(String.valueOf(this.maxParallel).length())
+                        .autoUpdateOnChange(true)
+                        .setPattern(Pattern.compile("\\*?[0-9_]*\\*?"))
+                        .setValidator(s -> s.startsWith("0") && s.length() > 1 ? String.valueOf(0) : s)
+                        .addTooltipLine(IKey.lang("gcym.machine.parallel_hatch.display"))
+                        .syncHandler("parallel_count"))
+                .child(new ButtonWidget<>()
+                        .pos(19, 36)
+                        .size(30, 20)
+                        .overlay(IKey.str("+1"))
+                        .background(GTGuiTextures.BUTTON)
+                        .syncHandler("parallel_add"))
+                .child(new ButtonWidget<>()
+                        .pos(128, 36)
+                        .size(30, 20)
+                        .overlay(IKey.str("-1"))
+                        .background(GTGuiTextures.BUTTON)
+                        .syncHandler("parallel_sub"))
+                .bindPlayerInventory();
     }
 
     public static @NotNull Function<String, String> getTextFieldValidator(IntSupplier maxSupplier) {
