@@ -1,12 +1,11 @@
 package gregicality.multiblocks;
 
+import gregtech.api.GTValues;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 import org.jetbrains.annotations.NotNull;
-
-import gregtech.GTInternalTags;
 
 import gregicality.multiblocks.api.utils.GCYMLog;
 import gregicality.multiblocks.common.CommonProxy;
@@ -16,7 +15,7 @@ import gregicality.multiblocks.common.metatileentities.GCYMMetaTileEntities;
 @Mod(modid = GregicalityMultiblocks.MODID,
      name = GregicalityMultiblocks.NAME,
      version = GregicalityMultiblocks.VERSION,
-     dependencies = GTInternalTags.DEP_VERSION_STRING)
+     dependencies = GTValues.VERSION)
 public class GregicalityMultiblocks {
 
     public static final String MODID = "gcym";
