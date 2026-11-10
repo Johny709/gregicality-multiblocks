@@ -15,7 +15,7 @@ import gregicality.multiblocks.common.metatileentities.GCYMMetaTileEntities;
 @Mod(modid = GregicalityMultiblocks.MODID,
      name = GregicalityMultiblocks.NAME,
      version = GregicalityMultiblocks.VERSION,
-     dependencies = GTValues.VERSION)
+     dependencies = "required-after:gregtech@[2.9.0,);")
 public class GregicalityMultiblocks {
 
     public static final String MODID = "gcym";
