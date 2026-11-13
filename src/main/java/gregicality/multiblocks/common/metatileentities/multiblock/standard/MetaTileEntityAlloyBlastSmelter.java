@@ -36,7 +36,6 @@ import gregtech.api.pattern.MultiblockShapeInfo;
 import gregtech.api.pattern.PatternMatchContext;
 import gregtech.api.recipes.Recipe;
 import gregtech.api.util.GTUtility;
-import gregtech.api.util.TextFormattingUtil;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.cube.OrientedOverlayRenderer;
 import gregtech.common.ConfigHolder;
@@ -83,7 +82,8 @@ public class MetaTileEntityAlloyBlastSmelter extends RecipeMapMultiblockControll
                 })
                 .addParallelsLine(this.recipeMapWorkable.getParallelLimit())
                 .addWorkingStatusLine()
-                .addProgressLine(this.recipeMapWorkable.getProgress(), this.recipeMapWorkable.getMaxProgress());
+                .addProgressLine(this.recipeMapWorkable.getProgress(), this.recipeMapWorkable.getMaxProgress())
+                .addRecipeOutputLine(this.recipeMapWorkable);
     }
 
     @Override
