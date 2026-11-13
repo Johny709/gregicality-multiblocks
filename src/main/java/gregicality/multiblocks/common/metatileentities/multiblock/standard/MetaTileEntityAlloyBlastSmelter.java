@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import com.cleanroommc.modularui.api.drawable.IKey;
 import gregtech.api.metatileentity.multiblock.ui.MultiblockUIBuilder;
 import gregtech.api.recipes.properties.impl.TemperatureProperty;
 import gregtech.api.util.KeyUtil;
@@ -13,7 +14,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
@@ -36,7 +36,6 @@ import gregtech.api.pattern.MultiblockShapeInfo;
 import gregtech.api.pattern.PatternMatchContext;
 import gregtech.api.recipes.Recipe;
 import gregtech.api.util.GTUtility;
-import gregtech.api.util.TextComponentUtil;
 import gregtech.api.util.TextFormattingUtil;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.cube.OrientedOverlayRenderer;
@@ -75,9 +74,8 @@ public class MetaTileEntityAlloyBlastSmelter extends RecipeMapMultiblockControll
                 .addCustom((key, syncer) -> {
                     // Coil heat capacity line
                     if (syncer.syncBoolean(isStructureFormed())) {
-                        ITextComponent heatString = TextComponentUtil.stringWithColor(
-                                TextFormatting.RED,
-                                TextFormattingUtil.formatNumbers(syncer.syncInt(this.blastFurnaceTemperature)) + "K");
+                        IKey heatString = KeyUtil.number(TextFormatting.RED,
+                                syncer.syncInt(getCurrentTemperature()), "K");
 
                         key.add(KeyUtil.lang(TextFormatting.GRAY, "gregtech.multiblock.blast_furnace.max_temperature",
                                 heatString));
